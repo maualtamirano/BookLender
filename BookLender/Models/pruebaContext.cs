@@ -9,7 +9,7 @@ namespace BookLender.Models
     {
         public pruebaContext()
         {
-        }
+        }  
 
         public pruebaContext(DbContextOptions<pruebaContext> options)
             : base(options)

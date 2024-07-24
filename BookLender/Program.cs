@@ -1,4 +1,5 @@
 using BookLender.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -9,6 +10,15 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<pruebaContext>(options =>
                     options.UseMySql(builder.Configuration.GetConnectionString("conexion"), Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.1.0-mysql")));
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Home/Index";
+        options.LogoutPath = "/Home/Logout";
+    });
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -25,10 +35,13 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllers();
 
 app.Run();
